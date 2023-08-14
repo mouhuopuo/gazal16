@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+
+    <record id="view_payslip_batch" model="ir.ui.view">
+        <field name="name">hr.payslip.inherited</field>
+        <field name="model">hr.payslip</field>
+        <field name="inherit_id" ref="hr_payroll.view_hr_payslip_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//sheet[1]/group[1]/field[6]" position="after">
+                <field name="house_wage"/>
+                <field name="allowances"/>
+                <field name="deductions"/>
+            </xpath>
+
+
+        </field>
+
+
+    </record>
+
+
+</odoo>

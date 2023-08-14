@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_employee_info" model="ir.ui.view">
+        <field name="name">employee.info.form</field>
+        <field name="model">employee.info</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="%(ALTANMYA_Excel_for_Saudibank.action_create_excel)d" type="action"
+                            class="btn-primary"
+                            string="Generate Excel"
+                    />
+
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="type"/>
+                            <field name="name"/>
+                            <field name="agreement_code"/>
+                            <field name="finance_account"/>
+                            <field name="num_of_section"/>
+                            <field name="num_of_facilityin_in_office"/>
+                        </group>
+                        <group>
+                            <field name="num_of_facilityin_in_commerce"/>
+                            <field name="bank_code"/>
+                            <field name="currency"/>
+                            <field name="file_reference"/>
+                            <!--                            <field name="employee_name"/>-->
+                            <!--                            <field name="identification_id"/>-->
+                            <!--                            <field name="bank_account_id"/>-->
+                            <!--                            <field name="hr_employee"/>-->
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_menu_info" model="ir.actions.act_window">
+        <field name="name">Employee Info</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">employee.info</field>
+        <field name="view_mode">tree,form</field>
+
+    </record>
+    <record id="view_employee_info_tree" model="ir.ui.view">
+        <field name="name">employee.info.tree</field>
+        <field name="model">employee.info</field>
+        <field name="arch" type="xml">
+            <tree>
+
+                <field name="type"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <menuitem
+            id="menu_employee"
+            name="Employee Info"
+            parent="hr.menu_hr_employee_payroll"
+            action="action_menu_info"
+            sequence="10"/>
+
+
+</odoo>
