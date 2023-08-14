@@ -8,7 +8,7 @@
         'account_accountant',
         'hr_contract_salary',
         'hr_payroll',
-        'report_xlsx',],
+        'report_xlsx', 'web', ],
     'data': [
         'security/ir.model.access.csv',
         'wizards/create_excel_wizard.xml',
@@ -17,5 +17,6 @@
         'views/payslip_inherit.xml',
         'report/report.xml',
 
-    ]
+    ],
+    'license': 'LGPL-3',
 }
