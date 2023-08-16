@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="view_create_excel_form" model="ir.ui.view">
+        <field name="name">create.excel.wizard.form</field>
+        <field name="model">create.excel.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="emp_info_id"/>
+<!--                    <field name="employee_name"/>-->
+                    <field name="payslips_batch_id"/>
+                    <field name="due_date"/>
+                    <field name="batch_num"/>
+                </group>
+                <footer>
+                    <button name="print_payroll_excel" type="object" class="btn-primary" string="Generate Excel">
+                    </button>
+
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_create_excel" model="ir.actions.act_window">
+        <field name="name">Create Excel</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">create.excel.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_create_excel_form"/>
+        <field name="target">new</field>
+        <field name="context">{
+            'dialog_size' : 'medium',
+            }
+        </field>
+    </record>
+</odoo>
