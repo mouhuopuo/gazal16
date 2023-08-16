@@ -9,16 +9,17 @@ from odoo.exceptions import ValidationError
 class EmpInfo(models.Model):
     _name = "employee.info"  # name of Table
 
-    type= fields.Char(string="Type")
-    name=fields.Char(string="Name")
-    agreement_code=fields.Char(string="Agreement Code", tracking=True)
-    finance_account=fields.Char(string="Finance account", tracking=True)
-    num_of_section=fields.Char(string="Number of ٍSection", tracking=True)
-    num_of_facilityin_in_office=fields.Char(string="Number of Facility (office)", tracking=True)
-    num_of_facilityin_in_commerce=fields.Char(string="Number of Facility (commerce)", tracking=True)
-    bank_code=fields.Char(string="Bank Code", tracking=True)
-    currency=fields.Many2one('res.currency', string='Currency',selection_add=[('3', 'SAR')])
-    file_reference=fields.Char( string='File Reference')
+    type = fields.Char(string="Type")
+    name = fields.Char(string="Name")
+    agreement_code = fields.Char(string="Agreement Code", tracking=True)
+    finance_account = fields.Char(string="Finance account", tracking=True)
+    num_of_section = fields.Char(string="Number of ٍSection", tracking=True)
+    num_of_facilityin_in_office = fields.Char(string="Number of Facility (office)", tracking=True)
+    num_of_facilityin_in_commerce = fields.Char(string="Number of Facility (commerce)", tracking=True)
+    bank_code = fields.Char(string="Bank Code", tracking=True)
+    currency = fields.Many2one('res.currency', string='Currency', selection_add=[('3', 'SAR')])
+    file_reference = fields.Char(string='File Reference')
+
     # hr_employee=fields.Many2one('hr.employee', string='Employee')
     # employee_name = fields.Char(string='Employee Name', compute='_compute_employee_data', store=True)
     # identification_id = fields.Char(string='Identification ID', compute='_compute_employee_data', store=True)
@@ -46,20 +47,12 @@ class EmpInfo(models.Model):
             # # ]
             # name=rec.bank_account_id
             # self.employee_name = name
-        print("name",name)
+        print("name", name)
 
-
-
-
-
-    # def name_get(self):
-    #     print("name get")
-    #     res = []
-    #     for rec in self:
-    #         name = f'{rec.hr_employee.name}'
-    #         res.append((rec.id, name))
-    #     return res
-    #
-    #
-
-
+    def name_get(self):
+        print("name get")
+        res = []
+        for rec in self:
+            name = f'{rec.name} - {rec.num_of_facilityin_in_office}'
+            res.append((rec.id, name))
+        return res

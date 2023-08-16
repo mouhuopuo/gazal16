@@ -1,6 +1,8 @@
 from odoo import models
 import base64
 import io
+import logging
+_LOGGER = logging.getLogger(__name__)
 
 
 class ExcelPayrollXlsx(models.AbstractModel):
@@ -37,6 +39,7 @@ class ExcelPayrollXlsx(models.AbstractModel):
 
     def generate_xlsx_report(self, workbook, data, emp):
         emp_info_id = data.get('emp_info_id', False)
+        batch_num = data.get('batch_num', False)
 
 
         processed_temp = data.get('temp', [])
@@ -44,9 +47,9 @@ class ExcelPayrollXlsx(models.AbstractModel):
         fields_to_include = ['type', 'name', 'agreement_code', 'finance_account', 'num_of_section',
                              'num_of_facilityin_in_office', 'num_of_facilityin_in_commerce', 'bank_code', 'currency',
                              'file_reference']
-        fields_to_capitalize = ['type', 'اسم العميل', 'رمز الاتفاقية', 'حساب التمويل', 'رقم الفرع',
+        fields_to_capitalize = ['type', 'اسم العميل', 'رمز الاتفاقية', 'حساب التمويل', 'رقم الفرع','تاريخ الأستحقاق ',
                                 ' رقم المنشأة في مكتب العمل  ',
-                                'رقم المنشأة في الغرفة التجارية', 'رمز البنك', 'العملة', 'مرجع الملف']
+                                'رقم المنشأة في الغرفة التجارية', 'رمز البنك', 'العملة','رقم الدفعة', 'مرجع الملف']
         fields_to_include_third_row = ['SN','هوية المستفيد/ المرجع'
             , 'المستفيد/اسم الموظف', 'رقم الحساب', 'رمز البنك', 'إجمالي المبلغ', 'الراتب الأساسي', 'بدل السكن',
                                        'دخل آخر', 'الخصومات', 'العنوان', 'العملة', 'الحالة', 'وصف الدفع', 'مرجع الدفع']
@@ -70,8 +73,20 @@ class ExcelPayrollXlsx(models.AbstractModel):
         for col, field_name in enumerate(fields_to_include):
             sheet.set_column(col, col, len(field_name)+2)
 
-
+        _LOGGER.info(" row data ")
+        _LOGGER.info(data['rec1'])
         row = 1
+        due_date = data.get('due_date', False)
+        # print("date ", type(due_date))
+        # print("date ", type(due_date))
+        # formatted_due_date = datetime.strptime(due_date, '%Y-%M-%d')
+        # print("time", formatted_due_date)
+        # formatted_due_date.strftime(formatted_due_date[0],'%d%m%y')
+        # print("time",formatted_due_date)
+
+
+
+
         for emp_info_record in data['rec1']:
             emp_info = self.env['employee.info'].browse(emp_info_record)
             if emp_info_id and emp_info_id != emp_info_record['id']:
@@ -83,16 +98,18 @@ class ExcelPayrollXlsx(models.AbstractModel):
                 emp_info.agreement_code,
                 emp_info.finance_account,
                 emp_info.num_of_section,
+                due_date,
                 emp_info.num_of_facilityin_in_office,
                 emp_info.num_of_facilityin_in_commerce,
                 emp_info.bank_code,
                 emp_info.currency.name,
-                emp_info.file_reference,
+                batch_num,
                 # curency[0],
             ]
             # for field_name in bank_info_record:
             sheet.write_row(row, col, row_data, border_format)
             row += 1
+
 
         for col, field_name in enumerate(fields_to_include_third_row):
             sheet.write(2, col, field_name.capitalize(), format_1)
@@ -117,7 +134,8 @@ class ExcelPayrollXlsx(models.AbstractModel):
                     'house_wage': 0.0,
                     'allowances': 0.0,
                     'deductions': 0.0,
-                    'state': 'inactive'
+                    'state': 'inactive',
+                    'empty':''
                 }
         print('agg ', aggregated_data)
         for (payslip_rec) in data['temp']:
@@ -143,6 +161,7 @@ class ExcelPayrollXlsx(models.AbstractModel):
                 aggregated_data[employee_id]['allowances'] += payslip.allowances
                 aggregated_data[employee_id]['deductions'] += payslip.deductions
                 aggregated_data[employee_id]['state'] = 'active'
+                aggregated_data[employee_id]['empty'] = ''
         print("aggregated", aggregated_data)
 
         # Write aggregated data to the Excel sheet
@@ -152,7 +171,7 @@ class ExcelPayrollXlsx(models.AbstractModel):
             col = 0
             row_data = [
                 sequence,
-                emp_data['employee_id'].id,
+                emp_data['employee_id'].identification_id,
                 emp_data['employee_id'].name,
                 emp_data['employee_id'].bank_account_id.acc_number,
                 emp_data['employee_id'].bank_account_id.bank_id.bic,
@@ -161,14 +180,16 @@ class ExcelPayrollXlsx(models.AbstractModel):
                 emp_data['house_wage'],
                 emp_data['allowances'],
                 emp_data['deductions'],
-                emp_data['house_wage'],
-                # emp_info['currency'].name,
+                emp_data['empty'],
+                emp_info['currency'].name,
                 emp_data['state'],
             ]
             sheet.write_row(row, col, row_data, border_format)
             row += 1
             sequence += 1
-        sheet.merge_range('K1:O1', '', format_1)
+
+        sheet.merge_range('L1:O1', '')
+        sheet.merge_range('L2:O2', '')
 
         sheet.freeze_panes(1, 0)
         for worksheet in workbook.worksheets():

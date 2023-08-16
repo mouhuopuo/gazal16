@@ -9,6 +9,8 @@
                     <field name="emp_info_id"/>
 <!--                    <field name="employee_name"/>-->
                     <field name="payslips_batch_id"/>
+                    <field name="due_date"/>
+                    <field name="batch_num"/>
                 </group>
                 <footer>
                     <button name="print_payroll_excel" type="object" class="btn-primary" string="Generate Excel">

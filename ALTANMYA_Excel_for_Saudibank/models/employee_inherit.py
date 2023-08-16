@@ -11,4 +11,4 @@ class HrEmployeePrivate(models.Model):
     _inherit = "hr.employee"
 
 
-    emp_Info=fields.Many2one('employee.info', string='Employee')
+    emp_Info=fields.Many2one('employee.info', string='Bank Excel Sheet')
