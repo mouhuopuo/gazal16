@@ -6,6 +6,7 @@ from pytz import timezone, utc
 import pytz
 
 from datetime import datetime
+from datetime import timedelta
 from odoo.exceptions import UserError
 
 
@@ -451,3 +452,25 @@ class HRLeave(models.Model):
                 included |= previous_employee_work_entries - overlappping
             overlappping.write({'leave_id': False})
             included.write({'active': False})
+    
+    ##Function to force the time off after certain period days
+    @api.onchange('holiday_status_id', 'date_from')
+    def _onchange_holiday_status_id(self):
+            print("_onchange_holiday_status_id")
+            if self.holiday_status_id.number_of_after_certain_period_days and self.holiday_status_id.number_of_after_certain_period_days > 0:
+                min_date = fields.Date.today() + timedelta(
+                    days=self.holiday_status_id.number_of_after_certain_period_days)
+                if self.date_from.date() < min_date:
+                    print("self.date_from.date() < min_date", self.date_from.date())
+
+    @api.constrains('holiday_status_id', 'date_from')
+    def _check_allowed_after_certain_days(self):
+            print("_check_custom_condition_days")
+            for leave in self:
+                if leave.holiday_status_id.number_of_after_certain_period_days and leave.holiday_status_id.number_of_after_certain_period_days > 0:
+                    min_date = fields.Date.today() + timedelta(
+                        days=leave.holiday_status_id.number_of_after_certain_period_days)
+                    if leave.date_from.date() < min_date:
+                        raise ValidationError(
+                            f"You can take time off for type '{leave.holiday_status_id.name}' after {leave.holiday_status_id.number_of_after_certain_period_days} days from Today."
+                        )
