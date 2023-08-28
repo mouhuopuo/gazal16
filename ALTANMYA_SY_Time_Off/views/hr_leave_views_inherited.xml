@@ -7,6 +7,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[5]" position="after">
                 <field name="is_configurable"/>
+                <field name="allowed_after_certain_period_days" attrs="{'invisible':[('is_configurable', '=', False)]}"/>
+                <field name="number_of_after_certain_period_days" attrs="{'invisible':[('allowed_after_certain_period_days', '=', False)]}"/>
                 <field name="is_sick_leave" attrs="{'invisible':[('is_configurable', '=', False)]}"/>
                 <field name="leave_date_from"
                        attrs="{'invisible':['|', ('is_sick_leave', '=', False), ('is_configurable', '=', False)]}"/>
