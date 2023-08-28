@@ -33,6 +33,10 @@ class Vacation(models.Model):
     is_sick_leave = fields.Boolean(string="إجازة مرضية")
     leave_date_from = fields.Integer(string='من اليوم', default=0)
     leave_date_to = fields.Integer(string='إلى اليوم', default=365)
+    
+    allowed_after_certain_period_days = fields.Boolean('Time Off Allowed After Certain Period Days?', default=False)
+    number_of_after_certain_period_days = fields.Integer('Number of Certain Period Days:', default=0)
+
 
     @api.onchange('customized_to')
     def empty_customization(self):
